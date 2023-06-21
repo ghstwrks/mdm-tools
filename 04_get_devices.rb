@@ -64,6 +64,15 @@ puts "res.status: #{res.status}"
 puts "res.headers['X-ADM-Auth-Session']: '#{res.headers['X-ADM-Auth-Session']}'"
 puts "res.body: #{res.body}"
 
+list = res.parse
+
+puts "=== DEVICES ==="
+list['devices'].each do |device|
+  puts "#{device['model']} -> #{device['serial_number']}"
+end
+
+puts "cursor: #{list['cursor']}"
+
 
 # TODO: revive the following so we can avoid hacking up this oauth library
 # http = HTTP #.headers('User-Agent' => 'Acropolis (dev) [Ghostworks Ltd]')
