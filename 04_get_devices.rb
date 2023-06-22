@@ -4,6 +4,7 @@ require 'json'
 require 'logger'
 require 'securerandom'
 require 'oauth'
+require 'pp'
 
 # advanced debug technique
 HTTP.default_options = HTTP::Options.new(features: {
@@ -56,7 +57,22 @@ res = at.get('/session')
 session = JSON.parse res.body
 # END OAUTH CRIMES
 
-http = HTTP.headers('User-Agent' => 'Acropolis (dev) [Ghostworks Ltd]', 'X-ADM-Auth-Session' => session['auth_session_token'])
+base = HTTP.headers('User-Agent' => 'Acropolis (dev) [Ghostworks Ltd]', 'X-Server-Protocol-Version' => 3)
+
+# = Get account
+http = base.headers('X-ADM-Auth-Session' => session['auth_session_token'])
+
+res = http.get('https://mdmenrollment.apple.com/account')
+
+account = res.parse
+
+puts "account:"
+pp account
+
+
+# = Get devices
+
+http = base.headers('X-ADM-Auth-Session' => res.headers['X-ADM-Auth-Session'])
 
 res = http.post('https://mdmenrollment.apple.com/server/devices')
 
@@ -72,6 +88,10 @@ list['devices'].each do |device|
 end
 
 puts "cursor: #{list['cursor']}"
+
+# = Define a profile
+
+# res.headers['X-ADM-Auth-Session']
 
 
 # TODO: revive the following so we can avoid hacking up this oauth library
