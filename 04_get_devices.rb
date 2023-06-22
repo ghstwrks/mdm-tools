@@ -85,7 +85,13 @@ list = res.parse
 puts "=== DEVICES ==="
 list['devices'].each do |device|
   puts "#{device['model']} -> #{device['serial_number']}"
+
+  pp device
+
+  puts '---'
 end
+
+puts "==="
 
 puts "cursor: #{list['cursor']}"
 
